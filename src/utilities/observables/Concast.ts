@@ -178,7 +178,7 @@ export class Concast<T> extends Observable<T> {
         // Delay unsubscribing from the underlying subscription slightly,
         // so that immediately subscribing another observer can keep the
         // subscription active.
-        if (sub) setTimeout(() => sub.unsubscribe());
+        if (sub) Promise.resolve().then(() => sub.unsubscribe());
         this.sub = null;
         this.latest = ["error", error];
         this.reject(error);
@@ -197,7 +197,7 @@ export class Concast<T> extends Observable<T> {
         // eventually have been initialized to a non-empty array.
         const value = sources.shift();
         if (!value) {
-          if (sub) setTimeout(() => sub.unsubscribe());
+          if (sub) Promise.resolve().then(() => sub.unsubscribe());
           this.sub = null;
           if (this.latest &&
               this.latest[0] === "next") {
